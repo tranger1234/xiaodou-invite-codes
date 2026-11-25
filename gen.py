@@ -42,7 +42,7 @@ for i, c in enumerate(shown):
         '<td><a href="{url}" target="_blank" rel="noopener">查看原文</a></td>'
         "</tr>".format(
             cls=cls,
-            seq=c["id"],
+            seq=i + 1,
             code=html.escape(c["code"]),
             badge=badge,
             src=html.escape(source_text(c)),
