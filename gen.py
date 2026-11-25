@@ -36,11 +36,10 @@ for i, c in enumerate(shown):
     rows.append(
         "<tr{cls}>"
         "<td>{seq}</td>"
-        "<td><code>{code}</code>{badge}</td>"
+        '<td><code class="copyable" data-code="{code}" title="点击复制">{code}</code>{badge}</td>'
         "<td>{src}{note}</td>"
         "<td>{found}</td>"
         '<td><a href="{url}" target="_blank" rel="noopener">查看原文</a></td>'
-        '<td><button class="copy" data-code="{code}">复制</button></td>'
         "</tr>".format(
             cls=cls,
             seq=c["id"],
@@ -78,12 +77,11 @@ th,td{{padding:10px 12px;text-align:left;border-bottom:1px solid #eee;vertical-a
 thead th{{background:#f2f2f7;position:sticky;top:0;white-space:nowrap}}
 tbody tr:last-child td{{border-bottom:none}}
 tr.new{{background:#fff8e1}}
-code{{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:15px;letter-spacing:.5px}}
+code{{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:15px;letter-spacing:.5px;cursor:pointer;padding:2px 4px;border-radius:6px}}
+code.copyable:hover{{background:#e8f0fe}}
 .badge{{display:inline-block;background:#ff3b30;color:#fff;font-size:11px;border-radius:8px;padding:1px 6px;margin-left:6px;vertical-align:2px}}
 .note{{color:#888;font-size:12px;margin-top:4px}}
 a{{color:#0a6cff;text-decoration:none}}
-button.copy{{border:1px solid #d0d0d5;background:#fff;border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer;white-space:nowrap}}
-button.copy:active{{background:#f0f0f3}}
 .foot{{color:#999;font-size:12px;margin-top:16px;line-height:1.7}}
 </style>
 </head>
@@ -92,10 +90,10 @@ button.copy:active{{background:#f0f0f3}}
 <h1>小豆邀请码全网搜索</h1>
 <p class="sub">字节跳动 AI 助手「小豆」邀请码全网搜集（小红书 / Threads / 论坛）</p>
 <div class="notice">这是数据快照，更新于 {now}（北京时间）。本页不会自动更新；实时每 20 秒更新的版本在 Muse 里。</div>
-<p class="stats">库里共 {total} 条邀请码（{stats}），本页只展示最新的 20 条，按发现时间从新到旧排列，前 10 条为最新。</p>
+<p class="stats">库里共 {total} 条邀请码（{stats}），本页只展示最新的 20 条，按发现时间从新到旧排列，前 10 条为最新；点击邀请码即可复制。</p>
 <div class="table-wrap">
 <table>
-<thead><tr><th>序号</th><th>邀请码</th><th>来源</th><th>发现时间</th><th>原文链接</th><th>操作</th></tr></thead>
+<thead><tr><th>序号</th><th>邀请码</th><th>来源</th><th>发现时间</th><th>原文链接</th></tr></thead>
 <tbody>
 {rows}
 </tbody>
@@ -104,13 +102,13 @@ button.copy:active{{background:#f0f0f3}}
 <p class="foot">提示：邀请码多为一次性、48 小时内过期，先到先得；本页所列邀请码未逐一实测是否可用，部分在原文评论区已被反馈“不行”或“可能已被使用”，请以实际填写结果为准。</p>
 </div>
 <script>
-document.querySelectorAll('button.copy').forEach(function(btn){{
-  btn.addEventListener('click', function(){{
-    var code = btn.getAttribute('data-code');
+document.querySelectorAll('code.copyable').forEach(function(el){{
+  el.addEventListener('click', function(){{
+    var code = el.getAttribute('data-code');
+    var orig = el.textContent;
     function done(){{
-      var old = btn.textContent;
-      btn.textContent = '已复制 ✓';
-      setTimeout(function(){{ btn.textContent = old; }}, 1500);
+      el.textContent = '已复制 ✓';
+      setTimeout(function(){{ el.textContent = orig; }}, 1500);
     }}
     if (navigator.clipboard && navigator.clipboard.writeText) {{
       navigator.clipboard.writeText(code).then(done).catch(function(){{ fallback(); }});
